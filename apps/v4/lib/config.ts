@@ -10,6 +10,10 @@ export const siteConfig = {
   },
   navItems: [
     {
+      href: "/wiredleap",
+      label: "WiredLeap",
+    },
+    {
       href: "/docs/installation",
       label: "Docs",
     },

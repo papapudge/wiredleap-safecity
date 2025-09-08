@@ -190,7 +190,9 @@ function CalendarDayButton({
       ref={ref}
       variant="ghost"
       size="icon"
-      data-day={day.date.toLocaleDateString()}
+      data-day={`${day.date.getDate().toString().padStart(2, "0")}/${(day.date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}/${day.date.getFullYear()}`}
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&
