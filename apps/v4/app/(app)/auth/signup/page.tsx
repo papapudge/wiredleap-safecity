@@ -262,7 +262,7 @@ export default function SignupPage() {
           <div className="mb-8">
             <h2 className="text-3xl font-bold mb-4">Join 500+ Law Enforcement Agencies</h2>
             <p className="text-lg text-muted-foreground">
-              Transform your city's safety with intelligent monitoring and rapid response capabilities.
+              Transform your city&apos;s safety with intelligent monitoring and rapid response capabilities.
             </p>
           </div>
 

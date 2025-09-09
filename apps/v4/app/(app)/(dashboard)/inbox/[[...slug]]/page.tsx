@@ -47,7 +47,7 @@ export default function InboxPage({ params }: { params: { slug?: string[] } }) {
         avatar: "/avatars/02.png",
         verified: false
       },
-      content: "Dear @BangalorePolice, there's a huge traffic jam on Ring Road due to waterlogged roads. No police personnel visible for traffic management.",
+      content: "Dear @BangalorePolice, there&apos;s a huge traffic jam on Ring Road due to waterlogged roads. No police personnel visible for traffic management.",
       timestamp: "8 min ago",
       priority: "medium",
       sentiment: "negative", 

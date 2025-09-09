@@ -9,8 +9,8 @@ import {
   CheckCircle, Star, ArrowRight, Play, Zap, Globe, Lock, Smartphone, 
   BarChart3, Clock, Camera, MessageSquare, Bell, Settings, Award, 
   Building, Target, Layers, ChevronRight, ExternalLink, Mail, Phone,
-  Twitter, Linkedin, Github, Download, Video, FileText, Calendar,
-  Sparkles, Rocket, Trophy, Heart, Database, Cloud
+  Twitter, Linkedin, Github, Download, Video, FileText,
+  Sparkles, Rocket, Database
 } from "lucide-react"
 
 const title = "WiredLeap - Neural Intelligence Beyond Tomorrow"
@@ -102,7 +102,7 @@ export default function LandingPage() {
     {
       name: "Dr. Priya Sharma", 
       role: "Municipal Corporation",
-      content: "The platform's ability to track citizen sentiment has improved our public service delivery significantly.",
+      content: "The platform&apos;s ability to track citizen sentiment has improved our public service delivery significantly.",
       rating: 5,
       avatar: "/avatars/municipal.jpg"
     },
@@ -122,32 +122,6 @@ export default function LandingPage() {
     }
   ]
 
-  const pricingPlans = [
-    {
-      name: "Starter",
-      price: "₹49,999",
-      period: "/month",
-      description: "Perfect for small police stations",
-      features: ["Up to 5 users", "Basic monitoring", "Standard support", "Core analytics"],
-      popular: false
-    },
-    {
-      name: "Professional",
-      price: "₹1,99,999",
-      period: "/month", 
-      description: "Ideal for city police departments",
-      features: ["Up to 50 users", "Advanced AI features", "24/7 priority support", "Custom integrations", "Advanced analytics", "Multi-department access"],
-      popular: true
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      period: "",
-      description: "For state-wide deployments",
-      features: ["Unlimited users", "White-label solution", "Dedicated support team", "Custom development", "On-premise deployment", "SLA guarantees"],
-      popular: false
-    }
-  ]
 
   const useCases = [
     {
