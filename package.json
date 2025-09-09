@@ -13,7 +13,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build --filter=!www",
     "build:cli": "turbo --filter=shadcn build",
     "build:registry": "pnpm --filter=www,v4 build:registry && pnpm --filter=www,v4 lint:fix && pnpm format:write -- --loglevel silent",
     "registry:build": "pnpm --filter=v4 registry:build && pnpm lint:fix && pnpm format:write -- --loglevel silent",

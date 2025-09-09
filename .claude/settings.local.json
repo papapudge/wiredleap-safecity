@@ -48,7 +48,8 @@
       "Bash(gh repo sync:*)",
       "Bash(gh repo delete:*)",
       "Bash(npm run build:*)",
-      "Bash(npm run clean:*)"
+      "Bash(npm run clean:*)",
+      "Bash(pnpm build:*)"
     ],
     "deny": []
   }
