@@ -25,6 +25,8 @@ import {
   Pause,
   Trash2
 } from "lucide-react"
+import { Area, AreaChart, CartesianGrid, XAxis, Line, LineChart } from "recharts"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/registry/new-york-v4/ui/chart"
 
 export default function MonitoringPage() {
   const [keyword, setKeyword] = React.useState("")
@@ -110,6 +112,46 @@ export default function MonitoringPage() {
     { label: "Coverage Platforms", value: "12", change: "100%", icon: MessageSquare }
   ]
 
+  // Chart data for monitoring analytics
+  const monitoringTrendData = [
+    { hour: "00:00", mentions: 45, alerts: 2 },
+    { hour: "04:00", mentions: 32, alerts: 1 },
+    { hour: "08:00", mentions: 156, alerts: 8 },
+    { hour: "12:00", mentions: 234, alerts: 12 },
+    { hour: "16:00", mentions: 189, alerts: 6 },
+    { hour: "20:00", mentions: 98, alerts: 3 },
+  ]
+
+  const sentimentData = [
+    { platform: "Twitter", positive: 65, negative: 25, neutral: 10 },
+    { platform: "Facebook", positive: 45, negative: 35, neutral: 20 },
+    { platform: "Instagram", positive: 70, negative: 20, neutral: 10 },
+    { platform: "News", positive: 30, negative: 50, neutral: 20 },
+  ]
+
+  const chartConfig = {
+    mentions: {
+      label: "Mentions",
+      color: "var(--chart-1)",
+    },
+    alerts: {
+      label: "Alerts",
+      color: "var(--chart-2)",
+    },
+    positive: {
+      label: "Positive",
+      color: "var(--chart-1)",
+    },
+    negative: {
+      label: "Negative", 
+      color: "var(--chart-2)",
+    },
+    neutral: {
+      label: "Neutral",
+      color: "var(--chart-3)",
+    },
+  } satisfies ChartConfig
+
   return (
     <div className="container-wrapper px-6 py-8">
       <div className="flex items-center gap-2 mb-6">
@@ -139,9 +181,10 @@ export default function MonitoringPage() {
       </div>
       
       <Tabs defaultValue="monitors" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="monitors">Active Monitors</TabsTrigger>
           <TabsTrigger value="alerts">Recent Alerts</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="create">Create Monitor</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
@@ -253,6 +296,102 @@ export default function MonitoringPage() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-lg font-semibold">Monitoring Analytics</h3>
+              <p className="text-sm text-muted-foreground">Real-time trends and sentiment analysis</p>
+            </div>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Monitoring Trends Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Mention Volume & Alerts</CardTitle>
+                <CardDescription>Hourly monitoring activity and alert generation</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                  <AreaChart data={monitoringTrendData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                      dataKey="hour"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                    />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent indicator="line" />}
+                    />
+                    <Area
+                      dataKey="mentions"
+                      type="natural"
+                      fill="var(--color-mentions)"
+                      fillOpacity={0.4}
+                      stroke="var(--color-mentions)"
+                    />
+                    <Area
+                      dataKey="alerts"
+                      type="natural"
+                      fill="var(--color-alerts)"
+                      fillOpacity={0.4}
+                      stroke="var(--color-alerts)"
+                    />
+                  </AreaChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+
+            {/* Sentiment Analysis Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Sentiment Analysis by Platform</CardTitle>
+                <CardDescription>Positive, negative, and neutral sentiment distribution</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                  <LineChart data={sentimentData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                      dataKey="platform"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                    />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent indicator="dot" />}
+                    />
+                    <Line
+                      dataKey="positive"
+                      type="monotone"
+                      stroke="var(--color-positive)"
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                    <Line
+                      dataKey="negative"
+                      type="monotone"
+                      stroke="var(--color-negative)"
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                    <Line
+                      dataKey="neutral"
+                      type="monotone"
+                      stroke="var(--color-neutral)"
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  </LineChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 

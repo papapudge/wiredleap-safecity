@@ -1,12 +1,14 @@
 import * as React from "react"
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import { Area, AreaChart, CartesianGrid, XAxis, Bar, BarChart, Line, LineChart } from "recharts"
 
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york-v4/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/registry/new-york-v4/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york-v4/ui/tabs"
 import { Progress } from "@/registry/new-york-v4/ui/progress"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/registry/new-york-v4/ui/chart"
 import { AlertTriangle, Activity, MapPin, Bell, TrendingUp, Users, Car, Shield } from "lucide-react"
 
 export default async function DashboardsPage({ params }: { params: { slug?: string[] } }) {
@@ -166,6 +168,66 @@ export default async function DashboardsPage({ params }: { params: { slug?: stri
   const config = dashboardConfig[key as keyof typeof dashboardConfig]
   if (!config) return notFound()
 
+  // Chart data for trend analysis
+  const incidentTrendData = [
+    { month: "Jan", incidents: 45, resolved: 42, responseTime: 4.2 },
+    { month: "Feb", incidents: 52, resolved: 48, responseTime: 3.8 },
+    { month: "Mar", incidents: 38, resolved: 35, responseTime: 4.5 },
+    { month: "Apr", incidents: 61, resolved: 58, responseTime: 3.9 },
+    { month: "May", incidents: 47, resolved: 44, responseTime: 4.1 },
+    { month: "Jun", incidents: 55, resolved: 52, responseTime: 3.7 },
+  ]
+
+  const trafficFlowData = [
+    { hour: "00:00", vehicles: 120, incidents: 2 },
+    { hour: "04:00", vehicles: 80, incidents: 1 },
+    { hour: "08:00", vehicles: 450, incidents: 8 },
+    { hour: "12:00", vehicles: 380, incidents: 5 },
+    { hour: "16:00", vehicles: 520, incidents: 12 },
+    { hour: "20:00", vehicles: 320, incidents: 6 },
+  ]
+
+  const responseTimeData = [
+    { day: "Mon", avgTime: 4.2, target: 5.0 },
+    { day: "Tue", avgTime: 3.8, target: 5.0 },
+    { day: "Wed", avgTime: 4.5, target: 5.0 },
+    { day: "Thu", avgTime: 3.9, target: 5.0 },
+    { day: "Fri", avgTime: 4.1, target: 5.0 },
+    { day: "Sat", avgTime: 3.7, target: 5.0 },
+    { day: "Sun", avgTime: 4.3, target: 5.0 },
+  ]
+
+  const chartConfig = {
+    incidents: {
+      label: "Incidents",
+      color: "var(--chart-1)",
+    },
+    resolved: {
+      label: "Resolved",
+      color: "var(--chart-2)",
+    },
+    responseTime: {
+      label: "Response Time (min)",
+      color: "var(--chart-3)",
+    },
+    vehicles: {
+      label: "Vehicles",
+      color: "var(--chart-1)",
+    },
+    incidents: {
+      label: "Traffic Incidents",
+      color: "var(--chart-2)",
+    },
+    avgTime: {
+      label: "Avg Response Time",
+      color: "var(--chart-1)",
+    },
+    target: {
+      label: "Target",
+      color: "var(--chart-2)",
+    },
+  } satisfies ChartConfig
+
   return (
     <div className="container-wrapper px-6 py-8">
       <div className="mb-6 flex items-center justify-between">
@@ -266,15 +328,120 @@ export default async function DashboardsPage({ params }: { params: { slug?: stri
           </div>
         </TabsContent>
 
-        <TabsContent value="trends">
+        <TabsContent value="trends" className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Incident Trends Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Incident Trends</CardTitle>
+                <CardDescription>Monthly incident volume and resolution rates</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                  <AreaChart data={incidentTrendData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                      dataKey="month"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                    />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent indicator="line" />}
+                    />
+                    <Area
+                      dataKey="incidents"
+                      type="natural"
+                      fill="var(--color-incidents)"
+                      fillOpacity={0.4}
+                      stroke="var(--color-incidents)"
+                    />
+                    <Area
+                      dataKey="resolved"
+                      type="natural"
+                      fill="var(--color-resolved)"
+                      fillOpacity={0.4}
+                      stroke="var(--color-resolved)"
+                    />
+                  </AreaChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+
+            {/* Response Time Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Response Time Performance</CardTitle>
+                <CardDescription>Daily average response times vs target</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                  <BarChart data={responseTimeData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                      dataKey="day"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                    />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent indicator="dashed" />}
+                    />
+                    <Bar
+                      dataKey="avgTime"
+                      fill="var(--color-avgTime)"
+                      radius={4}
+                    />
+                    <Bar
+                      dataKey="target"
+                      fill="var(--color-target)"
+                      fillOpacity={0.3}
+                      radius={4}
+                    />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Traffic Flow Chart */}
           <Card>
             <CardHeader>
-              <CardTitle>Trend Analysis</CardTitle>
+              <CardTitle>Traffic Flow & Incidents</CardTitle>
+              <CardDescription>Hourly traffic volume and incident correlation</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-64 flex items-center justify-center text-muted-foreground">
-                Trend visualization would go here
-              </div>
+              <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                <LineChart data={trafficFlowData}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="hour"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="dot" />}
+                  />
+                  <Line
+                    dataKey="vehicles"
+                    type="monotone"
+                    stroke="var(--color-vehicles)"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line
+                    dataKey="incidents"
+                    type="monotone"
+                    stroke="var(--color-incidents)"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ChartContainer>
             </CardContent>
           </Card>
         </TabsContent>

@@ -2,19 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarFooter,
-  SidebarSeparator,
-} from "@/registry/new-york-v4/ui/sidebar"
+import { cn } from "@/lib/utils"
 import {
   Shield,
   Activity,
@@ -93,68 +81,68 @@ export function AppSidebar() {
   const pathname = usePathname()
 
   return (
-    <Sidebar>
-      <SidebarHeader>
-        <div className="flex items-center gap-2 px-4 py-3">
-          <Shield className="h-8 w-8 text-primary" />
-          <div>
-            <h2 className="text-lg font-bold">WiredLeap</h2>
-            <p className="text-xs text-muted-foreground">Safe City Intelligence</p>
-          </div>
+    <div className="flex h-full flex-col bg-background">
+      {/* Header */}
+      <div className="flex items-center gap-2 px-4 py-3 border-b">
+        <Shield className="h-8 w-8 text-primary" />
+        <div>
+          <h2 className="text-lg font-bold">WiredLeap</h2>
+          <p className="text-xs text-muted-foreground">Safe City Intelligence</p>
         </div>
-        <SidebarSeparator />
-      </SidebarHeader>
+      </div>
 
-      <SidebarContent>
-        <SidebarMenu>
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto">
+        <nav className="p-2">
           {menuItems.map((section) => (
-            <SidebarMenuItem key={section.title}>
-              <SidebarMenuButton className="w-full justify-start font-medium text-sm">
+            <div key={section.title} className="mb-2">
+              <div className="flex items-center gap-2 px-2 py-2 text-sm font-medium text-muted-foreground">
                 <section.icon className="h-4 w-4" />
                 {section.title}
-              </SidebarMenuButton>
-              <SidebarMenuSub>
+              </div>
+              <div className="ml-6 space-y-1">
                 {section.items.map((item) => (
-                  <SidebarMenuSubItem key={item.href}>
-                    <SidebarMenuSubButton asChild isActive={pathname === item.href}>
-                      <Link href={item.href} className="flex items-center gap-2">
-                        <item.icon className="h-4 w-4" />
-                        {item.title}
-                      </Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
+                      pathname === item.href && "bg-accent text-accent-foreground"
+                    )}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {item.title}
+                  </Link>
                 ))}
-              </SidebarMenuSub>
-            </SidebarMenuItem>
+              </div>
+            </div>
           ))}
-        </SidebarMenu>
-      </SidebarContent>
+        </nav>
+      </div>
 
-      <SidebarFooter>
-        <SidebarSeparator />
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link href="/admin" className="flex items-center gap-2">
-                <Settings className="h-4 w-4" />
-                Admin Settings
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link href="/auth/login" className="flex items-center gap-2 text-red-600">
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-        <div className="p-4 text-xs text-muted-foreground">
+      {/* Footer */}
+      <div className="border-t p-2">
+        <div className="space-y-1">
+          <Link
+            href="/admin"
+            className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            <Settings className="h-4 w-4" />
+            Admin Settings
+          </Link>
+          <Link
+            href="/auth/login"
+            className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-red-600 transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </Link>
+        </div>
+        <div className="mt-4 p-2 text-xs text-muted-foreground">
           <div className="font-medium">Officer Rajesh Kumar</div>
           <div>Control Room Operator</div>
         </div>
-      </SidebarFooter>
-    </Sidebar>
+      </div>
+    </div>
   )
 }
