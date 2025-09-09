@@ -41,7 +41,10 @@
       "Bash(gh repo create:*)",
       "Bash(git remote set-url:*)",
       "Bash(git config:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(yarn dev)",
+      "Bash(pnpm dev:*)",
+      "Bash(vercel:*)"
     ],
     "deny": []
   }

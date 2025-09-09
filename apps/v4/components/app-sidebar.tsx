@@ -87,6 +87,11 @@ export function AppSidebar() {
         <Shield className="h-8 w-8 text-primary" />
         <div>
           <h2 className="text-lg font-bold">WiredLeap</h2>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>v1.0</span>
+            <span>•</span>
+            <span>History</span>
+          </div>
           <p className="text-xs text-muted-foreground">Safe City Intelligence</p>
         </div>
       </div>
