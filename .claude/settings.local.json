@@ -44,7 +44,9 @@
       "Bash(git commit:*)",
       "Bash(yarn dev)",
       "Bash(pnpm dev:*)",
-      "Bash(vercel:*)"
+      "Bash(vercel:*)",
+      "Bash(gh repo sync:*)",
+      "Bash(gh repo delete:*)"
     ],
     "deny": []
   }

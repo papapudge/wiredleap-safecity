@@ -1,16 +1,9 @@
+"use client"
+
 import * as React from "react"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import dynamic from "next/dynamic"
-
-const AreaChart = dynamic(() => import("recharts").then(mod => ({ default: mod.AreaChart })), { ssr: false })
-const Area = dynamic(() => import("recharts").then(mod => ({ default: mod.Area })), { ssr: false })
-const BarChart = dynamic(() => import("recharts").then(mod => ({ default: mod.BarChart })), { ssr: false })
-const Bar = dynamic(() => import("recharts").then(mod => ({ default: mod.Bar })), { ssr: false })
-const LineChart = dynamic(() => import("recharts").then(mod => ({ default: mod.LineChart })), { ssr: false })
-const Line = dynamic(() => import("recharts").then(mod => ({ default: mod.Line })), { ssr: false })
-const CartesianGrid = dynamic(() => import("recharts").then(mod => ({ default: mod.CartesianGrid })), { ssr: false })
-const XAxis = dynamic(() => import("recharts").then(mod => ({ default: mod.XAxis })), { ssr: false })
+import { Area, AreaChart, CartesianGrid, XAxis, Bar, BarChart, Line, LineChart } from "recharts"
 
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
@@ -20,9 +13,8 @@ import { Progress } from "@/registry/new-york-v4/ui/progress"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/registry/new-york-v4/ui/chart"
 import { AlertTriangle, Activity, MapPin, Bell, TrendingUp, Users, Car, Shield } from "lucide-react"
 
-export default async function DashboardsPage({ params }: { params: { slug?: string[] } }) {
-  const resolvedParams = await params
-  const slug = resolvedParams.slug ?? []
+export default function DashboardsPage({ params }: { params: { slug?: string[] } }) {
+  const slug = params.slug ?? []
   const key = slug[0] ?? "control-room"
   
   const dashboardConfig = {
