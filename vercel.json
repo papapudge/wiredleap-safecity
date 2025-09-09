@@ -1,5 +1,6 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "pnpm build",
   "installCommand": "pnpm install",
-  "framework": null
+  "framework": null,
+  "outputDirectory": "apps/v4/.next"
 }
