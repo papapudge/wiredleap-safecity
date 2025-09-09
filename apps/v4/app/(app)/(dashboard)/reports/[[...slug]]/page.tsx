@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york-v4/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/new-york-v4/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york-v4/ui/tabs"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
@@ -15,20 +15,16 @@ import {
   Download, 
   Plus, 
   Calendar, 
-  Clock, 
   CheckCircle, 
   AlertTriangle,
   FileSpreadsheet,
   FileJson,
   Database,
-  Filter,
-  Trash2,
-  RefreshCw,
-  Play,
-  Pause,
   Eye,
   Edit,
-  Share
+  Share,
+  Clock,
+  Pause
 } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis, Bar, BarChart, Pie, PieChart, Cell } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/registry/new-york-v4/ui/chart"

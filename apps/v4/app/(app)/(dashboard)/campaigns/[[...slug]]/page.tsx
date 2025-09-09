@@ -23,15 +23,12 @@ import {
   MessageSquare, 
   Target,
   Calendar,
-  Clock,
   CheckCircle,
   AlertTriangle,
-  Trash2,
   Eye
 } from "lucide-react"
 
 export default function CampaignsPage() {
-  const [selectedCampaign, setSelectedCampaign] = React.useState(null)
 
   const campaigns = [
     {

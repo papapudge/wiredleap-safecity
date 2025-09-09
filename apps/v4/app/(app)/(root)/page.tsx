@@ -5,11 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/reg
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/registry/new-york-v4/ui/avatar"
 import { 
-  Shield, Activity, Search, Users, MapPin, AlertTriangle, TrendingUp, Eye, Brain, 
-  CheckCircle, Star, ArrowRight, Play, Zap, Globe, Lock, Smartphone, 
-  BarChart3, Clock, Camera, MessageSquare, Bell, Settings, Award, 
-  Building, Target, Layers, ChevronRight, ExternalLink, Mail, Phone,
-  Twitter, Linkedin, Github, Download, Video, FileText,
+  Shield, Activity, Search, Users, MapPin, AlertTriangle, Eye, Brain, 
+  CheckCircle, Star, ArrowRight, Play, Lock, 
+  Camera, MessageSquare, Award, Calendar,
+  Target, 
+  Twitter, Linkedin, Github, Video, FileText,
   Sparkles, Rocket, Database
 } from "lucide-react"
 
@@ -220,7 +220,7 @@ export default function LandingPage() {
           
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground mb-8 sm:mb-12 max-w-xs sm:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed">
             Neural quantum processing that predicts threats with 99.7% accuracy. 
-            Our AI doesn't just analyze data—it understands human behavior patterns across 
+            Our AI doesn&apos;t just analyze data—it understands human behavior patterns across 
             14 dimensional vectors, seeing incidents 47 minutes before they occur.
           </p>
           
@@ -523,7 +523,7 @@ export default function LandingPage() {
                     ))}
                   </div>
                   <blockquote className="text-lg mb-6 italic leading-relaxed">
-                    "{testimonial.content}"
+                    &ldquo;{testimonial.content}&rdquo;
                   </blockquote>
                   <div className="flex items-center gap-4">
                     <Avatar>
@@ -604,7 +604,7 @@ export default function LandingPage() {
               Join the Future of Law Enforcement Today
             </h2>
             <p className="text-xl text-muted-foreground mb-12">
-              Don't let another crisis catch you unprepared. Start your free trial today and 
+              Don&apos;t let another crisis catch you unprepared. Start your free trial today and 
               experience the power of real-time intelligence.
             </p>
             

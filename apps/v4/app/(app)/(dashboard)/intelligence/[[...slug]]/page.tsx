@@ -8,7 +8,7 @@ import { Progress } from "@/registry/new-york-v4/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york-v4/ui/select"
 import { TrendingUp, TrendingDown, AlertTriangle, MapPin, Users, MessageSquare, Clock, Eye, Share2, Brain } from "lucide-react"
 
-export default function IntelligencePage({ params }: { params: { slug?: string[] } }) {
+export default function IntelligencePage() {
   const viralTopics = [
     { 
       topic: "Traffic fine scam", 

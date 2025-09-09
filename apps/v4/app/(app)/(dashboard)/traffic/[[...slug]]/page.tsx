@@ -11,11 +11,35 @@ import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Progress } from "@/registry/new-york-v4/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york-v4/ui/select"
 import { Avatar, AvatarFallback, AvatarImage } from "@/registry/new-york-v4/ui/avatar"
-import { Car, Camera, AlertTriangle, MapPin, Clock, Phone, User, CreditCard, FileText, Search, TrendingUp, Shield } from "lucide-react"
+import { Car, Camera, AlertTriangle, MapPin, Phone, User, CreditCard, Search, TrendingUp, Shield } from "lucide-react"
 
-export default function TrafficPage({ params }: { params: { slug?: string[] } }) {
+export default function TrafficPage() {
   const [licensePlate, setLicensePlate] = useState("")
-  const [searchResults, setSearchResults] = useState<any>(null)
+  const [searchResults, setSearchResults] = useState<{
+    plate: string;
+    owner: {
+      name: string;
+      phone: string;
+      address: string;
+    };
+    vehicle: {
+      make: string;
+      model: string;
+      year: string;
+      color: string;
+      registrationDate: string;
+      expiryDate: string;
+    };
+    violations: Array<{
+      id: string;
+      type: string;
+      location: string;
+      date: string;
+      time: string;
+      fine: string;
+      status: string;
+    }>;
+  } | null>(null)
   const [isSearching, setIsSearching] = useState(false)
 
   const handleVehicleLookup = () => {
@@ -281,7 +305,7 @@ export default function TrafficPage({ params }: { params: { slug?: string[] } })
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {searchResults.violations.map((violation: any, i: number) => (
+                    {searchResults.violations.map((violation, i: number) => (
                       <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
                         <div className="flex items-center gap-4">
                           <Badge variant={
@@ -319,8 +343,8 @@ export default function TrafficPage({ params }: { params: { slug?: string[] } })
                     <div>
                       <p className="font-semibold">Total Outstanding: ₹{
                         searchResults.violations
-                          .filter((v: any) => v.status === 'unpaid')
-                          .reduce((sum: number, v: any) => sum + v.fine, 0)
+                          .filter(v => v.status === 'unpaid')
+                          .reduce((sum: number, v) => sum + parseFloat(v.fine.replace('₹', '')), 0)
                       }</p>
                     </div>
                     <div className="flex gap-2">
@@ -346,7 +370,7 @@ export default function TrafficPage({ params }: { params: { slug?: string[] } })
                       </p>
                       {searchResults.socialSentiment.complaints.map((complaint: string, i: number) => (
                         <div key={i} className="text-sm p-2 bg-muted rounded">
-                          "{complaint}"
+                          &ldquo;{complaint}&rdquo;
                         </div>
                       ))}
                     </div>

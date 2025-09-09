@@ -7,7 +7,7 @@ import { Button } from "@/registry/new-york-v4/ui/button"
 import { Input } from "@/registry/new-york-v4/ui/input"
 import { Label } from "@/registry/new-york-v4/ui/label"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/registry/new-york-v4/ui/avatar"
+import { Avatar, AvatarFallback } from "@/registry/new-york-v4/ui/avatar"
 import { Switch } from "@/registry/new-york-v4/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york-v4/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/registry/new-york-v4/ui/table"
@@ -216,7 +216,7 @@ export default function AdminPage() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-base">{role.name}</CardTitle>
-                    <Badge variant={role.color as any}>{role.users} users</Badge>
+                    <Badge variant="secondary">{role.users} users</Badge>
                   </div>
                 </CardHeader>
                 <CardContent>

@@ -20,11 +20,9 @@ import {
   Calendar as CalendarIcon, 
   Clock, 
   CheckCircle, 
-  AlertTriangle,
   FileSpreadsheet,
   FileJson,
   Database,
-  Filter,
   Trash2,
   RefreshCw,
   Play,
@@ -434,7 +432,7 @@ export default function ExportsPage() {
                   <h4 className="font-medium">Export Guidelines</h4>
                   <ul className="text-sm space-y-1 text-muted-foreground">
                     <li>• Large exports may take several minutes to process</li>
-                    <li>• You'll receive an email when your export is ready</li>
+                    <li>• You&apos;ll receive an email when your export is ready</li>
                     <li>• Exports are available for 30 days</li>
                     <li>• Sensitive data is automatically filtered</li>
                     <li>• Maximum 1M records per export</li>

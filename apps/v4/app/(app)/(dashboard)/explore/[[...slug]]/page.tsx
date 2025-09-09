@@ -1,12 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york-v4/ui/card"
+import { Card, CardContent } from "@/registry/new-york-v4/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york-v4/ui/tabs"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Input } from "@/registry/new-york-v4/ui/input"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/registry/new-york-v4/ui/avatar"
+import { Avatar, AvatarFallback } from "@/registry/new-york-v4/ui/avatar"
 import { Progress } from "@/registry/new-york-v4/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york-v4/ui/select"
 import { 
@@ -20,8 +20,7 @@ import {
   Calendar,
   Filter,
   ExternalLink,
-  Eye,
-  AlertTriangle
+  Eye
 } from "lucide-react"
 
 export default function ExplorePage() {

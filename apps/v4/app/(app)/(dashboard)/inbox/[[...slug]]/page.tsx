@@ -10,9 +10,9 @@ import { Button } from "@/registry/new-york-v4/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/registry/new-york-v4/ui/avatar"
 import { Textarea } from "@/registry/new-york-v4/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york-v4/ui/select"
-import { MessageSquare, Clock, User, AlertTriangle, CheckCircle, Reply, Heart, Share2, ExternalLink, MapPin } from "lucide-react"
+import { MessageSquare, Clock, CheckCircle, Reply, Heart, Share2, ExternalLink, MapPin } from "lucide-react"
 
-export default function InboxPage({ params }: { params: { slug?: string[] } }) {
+export default function InboxPage() {
   const [selectedThread, setSelectedThread] = useState<string | null>(null)
   const [replyText, setReplyText] = useState("")
 
@@ -123,15 +123,6 @@ export default function InboxPage({ params }: { params: { slug?: string[] } }) {
     }
   }
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'destructive'
-      case 'medium': return 'default'
-      case 'low': return 'secondary'
-      default: return 'outline'
-    }
-  }
-
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
       case 'positive': return 'text-green-500'
@@ -212,7 +203,7 @@ export default function InboxPage({ params }: { params: { slug?: string[] } }) {
 
                           <div className="flex items-center justify-between">
                             <div className="flex gap-2">
-                              <Badge variant={getPriorityColor(item.priority) as any}>
+                              <Badge variant="secondary">
                                 {item.priority}
                               </Badge>
                               <Badge variant="outline" className={getSentimentColor(item.sentiment)}>

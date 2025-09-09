@@ -10,10 +10,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york-v4
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Progress } from "@/registry/new-york-v4/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york-v4/ui/select"
-import { CalendarDateRangePicker } from "@/registry/new-york-v4/ui/date-range-picker"
-import { Search, TrendingUp, MapPin, Clock, BarChart3, Users, MessageSquare, AlertCircle } from "lucide-react"
+import { Search, TrendingUp, MapPin, Clock, MessageSquare, AlertCircle } from "lucide-react"
 
-export default function AnalysisPage({ params }: { params: { slug?: string[] } }) {
+export default function AnalysisPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isSearching, setIsSearching] = useState(false)
   const [showResults, setShowResults] = useState(false)
@@ -145,7 +144,7 @@ export default function AnalysisPage({ params }: { params: { slug?: string[] } }
           {showResults && (
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <h2 className="text-xl font-semibold">Analysis Results for "{mockSearchResults.query}"</h2>
+                <h2 className="text-xl font-semibold">Analysis Results for &ldquo;{mockSearchResults.query}&rdquo;</h2>
                 <Badge variant="secondary">{mockSearchResults.timeRange}</Badge>
                 <Badge variant="outline">{mockSearchResults.totalPosts.toLocaleString()} posts found</Badge>
               </div>

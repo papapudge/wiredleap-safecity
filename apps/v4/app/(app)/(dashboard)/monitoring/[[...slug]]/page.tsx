@@ -3,10 +3,9 @@
 import * as React from "react"
 import { Input } from "@/registry/new-york-v4/ui/input"
 import { Button } from "@/registry/new-york-v4/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york-v4/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/new-york-v4/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york-v4/ui/tabs"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
-import { Progress } from "@/registry/new-york-v4/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york-v4/ui/select"
 import { Label } from "@/registry/new-york-v4/ui/label"
 import { Switch } from "@/registry/new-york-v4/ui/switch"
@@ -15,15 +14,13 @@ import {
   Eye, 
   Plus, 
   AlertTriangle, 
-  TrendingUp, 
   Activity, 
-  Clock, 
-  Users,
   MessageSquare,
   Settings,
   Play,
   Pause,
-  Trash2
+  Trash2,
+  Clock
 } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis, Line, LineChart } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/registry/new-york-v4/ui/chart"

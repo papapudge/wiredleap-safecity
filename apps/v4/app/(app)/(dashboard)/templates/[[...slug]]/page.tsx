@@ -18,10 +18,7 @@ import {
   Trash2, 
   MessageSquare, 
   AlertTriangle,
-  Search,
-  Filter,
-  Clock,
-  User
+  Search
 } from "lucide-react"
 
 export default function TemplatesPage() {
