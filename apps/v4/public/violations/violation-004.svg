@@ -1,0 +1,10 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#f3f4f6"/>
+  <rect x="50" y="50" width="300" height="200" fill="#e5e7eb" stroke="#9ca3af" stroke-width="2"/>
+  <text x="200" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#374151">No Entry Zone</text>
+  <text x="200" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">TN-09-PQ-7890</text>
+  <text x="200" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#9ca3af">Restricted Area</text>
+  <circle cx="200" cy="220" r="30" fill="#ef4444"/>
+  <line x1="180" y1="200" x2="220" y2="240" stroke="white" stroke-width="4"/>
+  <line x1="220" y1="200" x2="180" y2="240" stroke="white" stroke-width="4"/>
+</svg>

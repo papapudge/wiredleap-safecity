@@ -1,6 +1,5 @@
 {
-  "buildCommand": "pnpm build",
+  "buildCommand": "cd apps/v4 && pnpm build",
   "installCommand": "pnpm install",
-  "framework": null,
   "outputDirectory": "apps/v4/.next"
 }

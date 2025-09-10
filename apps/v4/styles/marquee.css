@@ -1,0 +1,26 @@
+@keyframes marquee-1 {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes marquee-2 {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes marquee-3 {
+  0% { transform: translateY(-25%); }
+  100% { transform: translateY(-75%); }
+}
+
+.marquee-1 {
+  animation: marquee-1 30s linear infinite;
+}
+
+.marquee-2 {
+  animation: marquee-2 35s linear infinite;
+}
+
+.marquee-3 {
+  animation: marquee-3 40s linear infinite;
+}

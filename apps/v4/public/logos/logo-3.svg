@@ -1,0 +1,5 @@
+<svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="20,5 35,30 5,30" fill="#F59E0B"/>
+  <rect x="45" y="10" width="70" height="20" rx="10" fill="#F59E0B"/>
+  <text x="80" y="25" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">CORP</text>
+</svg>

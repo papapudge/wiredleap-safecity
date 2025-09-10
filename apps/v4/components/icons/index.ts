@@ -1,0 +1,6 @@
+export { ControlRoomDashboardIcon } from './control-room-dashboard'
+export { AnalysisModuleIcon } from './analysis-module'
+export { IntelligenceCenterIcon } from './intelligence-center'
+export { SocialInboxIcon } from './social-inbox'
+export { TrafficIntelligenceIcon } from './traffic-intelligence'
+export { AIPoweredAnalyticsIcon } from './ai-powered-analytics'

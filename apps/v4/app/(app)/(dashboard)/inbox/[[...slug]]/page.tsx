@@ -150,11 +150,11 @@ export default function InboxPage() {
       </div>
 
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList>
           {Object.entries(tabCounts).map(([key, count]) => (
             <TabsTrigger key={key} value={key} className="relative">
               {key[0].toUpperCase() + key.slice(1)}
-              <Badge variant="secondary" className="ml-2">
+              <Badge variant="secondary" className="ml-1 text-xs">
                 {count}
               </Badge>
             </TabsTrigger>
@@ -261,18 +261,19 @@ export default function InboxPage() {
                         Reply to Thread
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-3 p-4">
                       <div className="space-y-2">
                         <label className="text-sm font-medium">AI Suggested Responses</label>
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                           {aiSuggestions.map((suggestion, i) => (
                             <Button
                               key={i}
                               variant="outline"
-                              className="w-full text-left h-auto p-3 justify-start"
+                              size="sm"
+                              className="w-full text-left h-auto p-2 justify-start text-xs leading-tight"
                               onClick={() => setReplyText(suggestion)}
                             >
-                              {suggestion}
+                              <span className="line-clamp-2">{suggestion}</span>
                             </Button>
                           ))}
                         </div>
@@ -284,7 +285,8 @@ export default function InboxPage() {
                           placeholder="Type your response..."
                           value={replyText}
                           onChange={(e) => setReplyText(e.target.value)}
-                          rows={4}
+                          rows={3}
+                          className="text-sm resize-none"
                         />
                       </div>
 
@@ -316,14 +318,14 @@ export default function InboxPage() {
                         <Button variant="outline">Save Draft</Button>
                       </div>
 
-                      <div className="border-t pt-4 space-y-2">
-                        <h4 className="font-medium">Quick Actions</h4>
-                        <div className="flex gap-2 flex-wrap">
-                          <Button variant="outline" size="sm">Create Incident</Button>
-                          <Button variant="outline" size="sm">Assign Team</Button>
-                          <Button variant="outline" size="sm">Escalate</Button>
-                          <Button variant="outline" size="sm">Mark Resolved</Button>
-                          <Button variant="outline" size="sm">
+                      <div className="border-t pt-3 space-y-2">
+                        <h4 className="font-medium text-sm">Quick Actions</h4>
+                        <div className="flex gap-1 flex-wrap">
+                          <Button variant="outline" size="sm" className="text-xs px-2 py-1 h-7">Create Incident</Button>
+                          <Button variant="outline" size="sm" className="text-xs px-2 py-1 h-7">Assign Team</Button>
+                          <Button variant="outline" size="sm" className="text-xs px-2 py-1 h-7">Escalate</Button>
+                          <Button variant="outline" size="sm" className="text-xs px-2 py-1 h-7">Mark Resolved</Button>
+                          <Button variant="outline" size="sm" className="text-xs px-2 py-1 h-7">
                             <ExternalLink className="h-3 w-3 mr-1" />
                             View Original
                           </Button>
@@ -342,8 +344,8 @@ export default function InboxPage() {
                   </Card>
                 )}
 
-                <Card>
-                  <CardHeader>
+                <Card className="flex-shrink-0">
+                  <CardHeader className="pb-3">
                     <CardTitle className="text-lg">Inbox Statistics</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">

@@ -49,7 +49,26 @@
       "Bash(gh repo delete:*)",
       "Bash(npm run build:*)",
       "Bash(npm run clean:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(pnpm --filter=v4 build)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_uvG66o/**)",
+      "Bash(mkdir:*)",
+      "Bash(pnpm:*)",
+      "WebFetch(domain:maps.googleapis.com)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_ZNNdl0/**)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_eL5Wde/**)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_i68HKx/**)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_dEo9HE/**)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_Kw9fRE/**)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_MFdPg4/**)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_P9UNqW/**)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_VtJEES/**)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_m1Bgu5/**)",
+      "Bash(wc:*)",
+      "Bash(grep:*)",
+      "Bash(killall:*)",
+      "Read(//var/folders/sv/365w8j2j1t36l3vhpmr4pvrw0000gn/T/TemporaryItems/NSIRD_screencaptureui_ZTlZL9/**)",
+      "Bash(git show:*)"
     ],
     "deny": []
   }

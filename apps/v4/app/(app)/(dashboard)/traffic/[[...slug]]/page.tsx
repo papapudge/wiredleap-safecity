@@ -12,6 +12,12 @@ import { Progress } from "@/registry/new-york-v4/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york-v4/ui/select"
 import { Avatar, AvatarFallback, AvatarImage } from "@/registry/new-york-v4/ui/avatar"
 import { Car, Camera, AlertTriangle, MapPin, Phone, User, CreditCard, Search, TrendingUp, Shield } from "lucide-react"
+import dynamic from "next/dynamic"
+
+const GoogleMap = dynamic(() => import("@/components/google-map").then(mod => ({ default: mod.GoogleMap })), {
+  ssr: false,
+  loading: () => <div className="h-full w-full bg-muted flex items-center justify-center">Loading map...</div>
+})
 
 export default function TrafficPage() {
   const [licensePlate, setLicensePlate] = useState("")
@@ -21,14 +27,19 @@ export default function TrafficPage() {
       name: string;
       phone: string;
       address: string;
+      licenseNumber?: string;
+      photo?: string;
     };
     vehicle: {
-      make: string;
+      make?: string;
       model: string;
-      year: string;
+      year?: string;
       color: string;
       registrationDate: string;
-      expiryDate: string;
+      expiryDate?: string;
+      chassisNumber?: string;
+      insurance?: string;
+      fitness?: string;
     };
     violations: Array<{
       id: string;
@@ -36,11 +47,21 @@ export default function TrafficPage() {
       location: string;
       date: string;
       time: string;
-      fine: string;
+      fine: number;
       status: string;
+      camera?: string;
+      speed?: string;
+      evidence?: string;
     }>;
+    socialSentiment?: {
+      mentions: number;
+      sentiment: string;
+      complaints: string[];
+    };
   } | null>(null)
   const [isSearching, setIsSearching] = useState(false)
+  const [isGeneratingNotice, setIsGeneratingNotice] = useState(false)
+  const [isCollectingFine, setIsCollectingFine] = useState(false)
 
   const handleVehicleLookup = () => {
     if (!licensePlate.trim()) return
@@ -111,6 +132,42 @@ export default function TrafficPage() {
     }, 1500)
   }
 
+  const handleGenerateNotice = () => {
+    if (!searchResults) return
+    setIsGeneratingNotice(true)
+    
+    // Simulate notice generation
+    setTimeout(() => {
+      alert(`Notice generated successfully for ${searchResults.plate}\n\nOutstanding fines: ₹${searchResults.violations.filter(v => v.status === 'unpaid').reduce((sum, v) => sum + v.fine, 0)}\n\nNotice will be sent to registered address.`)
+      setIsGeneratingNotice(false)
+    }, 2000)
+  }
+
+  const handleCollectFine = () => {
+    if (!searchResults) return
+    setIsCollectingFine(true)
+    
+    // Simulate fine collection process
+    setTimeout(() => {
+      const unpaidViolations = searchResults.violations.filter(v => v.status === 'unpaid')
+      if (unpaidViolations.length === 0) {
+        alert('No outstanding fines to collect!')
+      } else {
+        const totalAmount = unpaidViolations.reduce((sum, v) => sum + v.fine, 0)
+        alert(`Fine collection initiated for ${searchResults.plate}\n\nTotal amount: ₹${totalAmount}\n\nPayment gateway would open here.`)
+        
+        // Update violations to paid status (simulation)
+        setSearchResults(prev => prev ? {
+          ...prev,
+          violations: prev.violations.map(v => 
+            v.status === 'unpaid' ? { ...v, status: 'paid' } : v
+          )
+        } : null)
+      }
+      setIsCollectingFine(false)
+    }, 1500)
+  }
+
   const violationsStats = [
     { type: "Overspeeding", count: 1247, fine: 1247000, icon: TrendingUp },
     { type: "Signal Jump", count: 892, fine: 1338000, icon: AlertTriangle },
@@ -149,10 +206,10 @@ export default function TrafficPage() {
   ]
 
   const cameraStatus = [
-    { id: "CAM-RR-12", location: "Ring Road Junction", status: "online", violations: 45 },
-    { id: "CAM-MG-05", location: "MG Road Signal", status: "online", violations: 32 },
-    { id: "CAM-EC-18", location: "Electronic City", status: "offline", violations: 0 },
-    { id: "CAM-BR-08", location: "Brigade Road", status: "online", violations: 28 }
+    { id: "CAM-RR-12", location: "Ring Road Junction", status: "online", violations: 45, lat: 12.9698, lng: 77.7500 },
+    { id: "CAM-MG-05", location: "MG Road Signal", status: "online", violations: 32, lat: 12.9716, lng: 77.5946 },
+    { id: "CAM-EC-18", location: "Electronic City", status: "offline", violations: 0, lat: 12.8456, lng: 77.6603 },
+    { id: "CAM-BR-08", location: "Brigade Road", status: "online", violations: 28, lat: 12.9655, lng: 77.6047 }
   ]
 
   return (
@@ -173,10 +230,11 @@ export default function TrafficPage() {
       </div>
 
       <Tabs defaultValue="lookup" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="lookup">Vehicle Lookup</TabsTrigger>
           <TabsTrigger value="violations">Live Violations</TabsTrigger>
           <TabsTrigger value="cameras">Camera Network</TabsTrigger>
+          <TabsTrigger value="map">Map View</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
@@ -344,18 +402,31 @@ export default function TrafficPage() {
                       <p className="font-semibold">Total Outstanding: ₹{
                         searchResults.violations
                           .filter(v => v.status === 'unpaid')
-                          .reduce((sum: number, v) => sum + parseFloat(v.fine.replace('₹', '')), 0)
+                          .reduce((sum: number, v) => sum + v.fine, 0)
                       }</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm">Generate Notice</Button>
-                      <Button size="sm">Collect Fine</Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={handleGenerateNotice}
+                        disabled={isGeneratingNotice}
+                      >
+                        {isGeneratingNotice ? 'Generating...' : 'Generate Notice'}
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        onClick={handleCollectFine}
+                        disabled={isCollectingFine || searchResults.violations.filter(v => v.status === 'unpaid').length === 0}
+                      >
+                        {isCollectingFine ? 'Processing...' : 'Collect Fine'}
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {searchResults.socialSentiment.mentions > 0 && (
+              {searchResults.socialSentiment && searchResults.socialSentiment.mentions > 0 && (
                 <Card className="lg:col-span-2">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -366,9 +437,9 @@ export default function TrafficPage() {
                   <CardContent>
                     <div className="space-y-2">
                       <p className="text-sm">
-                        <span className="font-medium">{searchResults.socialSentiment.mentions}</span> social media mentions found
+                        <span className="font-medium">{searchResults.socialSentiment!.mentions}</span> social media mentions found
                       </p>
-                      {searchResults.socialSentiment.complaints.map((complaint: string, i: number) => (
+                      {searchResults.socialSentiment!.complaints.map((complaint: string, i: number) => (
                         <div key={i} className="text-sm p-2 bg-muted rounded">
                           &ldquo;{complaint}&rdquo;
                         </div>
@@ -501,6 +572,121 @@ export default function TrafficPage() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="map" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Traffic Camera Network
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <span>{cameraStatus.length} cameras total</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-green-500 rounded-full" />
+                    <span className="text-xs">Online</span>
+                    <div className="w-3 h-3 bg-red-500 rounded-full ml-2" />
+                    <span className="text-xs">Offline</span>
+                    <div className="w-3 h-3 bg-orange-500 rounded-full ml-2" />
+                    <span className="text-xs">High Activity</span>
+                  </div>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="h-[600px]">
+                <GoogleMap
+                  center={{ lat: 12.9716, lng: 77.5946 }}
+                  zoom={12}
+                  className="h-full w-full rounded-b-lg"
+                  markers={cameraStatus.map(camera => ({
+                    id: camera.id,
+                    lat: camera.lat,
+                    lng: camera.lng,
+                    title: `${camera.id} - ${camera.location}`,
+                    severity: camera.status === 'offline' ? 'low' : camera.violations > 40 ? 'high' : 'medium',
+                    incidents: camera.violations
+                  }))}
+                  onMarkerClick={(cameraId) => {
+                    const camera = cameraStatus.find(c => c.id === cameraId)
+                    if (camera) {
+                      console.log('Selected camera:', camera)
+                      // You can add additional logic here to show camera details
+                    }
+                  }}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Coverage Analysis</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Total coverage</span>
+                    <span className="font-medium">85%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">High-traffic areas</span>
+                    <span className="font-medium">92%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Blind spots</span>
+                    <span className="font-medium text-red-600">3</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Violation Hotspots</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Ring Road Junction</span>
+                    <span className="font-medium text-red-600">45</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">MG Road Signal</span>
+                    <span className="font-medium text-orange-600">32</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Brigade Road</span>
+                    <span className="font-medium">28</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">System Health</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Online cameras</span>
+                    <span className="font-medium text-green-600">
+                      {cameraStatus.filter(c => c.status === 'online').length}/{cameraStatus.length}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">System uptime</span>
+                    <span className="font-medium">99.2%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Avg response time</span>
+                    <span className="font-medium">1.2s</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="analytics">

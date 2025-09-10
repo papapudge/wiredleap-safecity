@@ -2,19 +2,39 @@
 
 import * as React from "react"
 import { notFound } from "next/navigation"
-import Link from "next/link"
+import Image from "next/image"
+import { motion, AnimatePresence } from "framer-motion"
 import { Area, AreaChart, CartesianGrid, XAxis, Bar, BarChart, Line, LineChart } from "recharts"
 
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/registry/new-york-v4/ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/registry/new-york-v4/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york-v4/ui/tabs"
 import { Progress } from "@/registry/new-york-v4/ui/progress"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/registry/new-york-v4/ui/chart"
-import { AlertTriangle, Activity, MapPin, Bell, TrendingUp, Users, Car, Shield } from "lucide-react"
+import { AlertTriangle, Activity, MapPin, Bell, TrendingUp, Users, Car, Shield, Calendar, Clock, MapPin as LocationIcon, User } from "lucide-react"
+import { 
+  pageTransition, 
+  staggerContainer, 
+  staggerItem, 
+  fadeInUp, 
+  cardHover, 
+  buttonHover, 
+  buttonTap, 
+  smoothTransition,
+  chartFadeIn,
+  modalOverlay,
+  modalContent,
+  pulseGlow
+} from "@/lib/animations"
+import { AnimatedCard } from "@/components/animated-card"
+import { AnimatedButton } from "@/components/animated-button"
+import { PageTransition, StaggeredContainer } from "@/components/page-transition"
+import { ContextualBanner } from "@/components/contextual-banner"
 
 export default function DashboardsPage({ params }: { params: { slug?: string[] } }) {
-  const slug = params.slug ?? []
+  const { slug = [] } = params
   const key = slug[0] ?? "control-room"
   
   const dashboardConfig = {
@@ -215,7 +235,7 @@ export default function DashboardsPage({ params }: { params: { slug?: string[] }
       label: "Vehicles",
       color: "var(--chart-1)",
     },
-    incidents: {
+    trafficIncidents: {
       label: "Traffic Incidents",
       color: "var(--chart-2)",
     },
@@ -229,61 +249,212 @@ export default function DashboardsPage({ params }: { params: { slug?: string[] }
     },
   } satisfies ChartConfig
 
-  return (
-    <div className="container-wrapper px-6 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold tracking-tight">{config.title}</h1>
-            <Badge variant="secondary" className="rounded">Live</Badge>
-          </div>
-          <p className="text-muted-foreground">{config.description}</p>
-        </div>
-        <div className="flex gap-2">
-          <Button asChild variant="outline" size="sm">
-            <Link href="/analysis">New Analysis</Link>
-          </Button>
-          <Button asChild size="sm">
-            <Link href="/monitoring">Create Monitor</Link>
-          </Button>
-        </div>
-      </div>
+  const detailedData = {
+    "ANPR Violations": {
+      title: "ANPR Violations Details",
+      description: "Recent traffic violations detected by ANPR cameras",
+      data: [
+        {
+          id: "V001",
+          vehicle: "MH-12-AB-1234",
+          violation: "Speed Limit Exceeded",
+          location: "Bandra-Kurla Complex, Mumbai",
+          time: "2024-01-15 14:23:45",
+          speed: "85 km/h (Limit: 60 km/h)",
+          camera: "ANPR-BKC-03",
+          status: "Pending",
+          fine: "₹1,500",
+          image: "/violations/violation-001.svg"
+        },
+        {
+          id: "V002", 
+          vehicle: "DL-3C-XY-9876",
+          violation: "Signal Jump",
+          location: "Connaught Place, Delhi",
+          time: "2024-01-15 13:45:12",
+          camera: "ANPR-CP-07",
+          status: "Processed",
+          fine: "₹5,000",
+          image: "/violations/violation-002.svg"
+        },
+        {
+          id: "V003",
+          vehicle: "KA-05-MN-4567",
+          violation: "Wrong Lane Usage",
+          location: "Electronic City, Bangalore",
+          time: "2024-01-15 12:15:30",
+          camera: "ANPR-EC-12",
+          status: "Under Review",
+          fine: "₹2,000",
+          image: "/violations/violation-003.svg"
+        },
+        {
+          id: "V004",
+          vehicle: "TN-09-PQ-7890",
+          violation: "No Entry Zone",
+          location: "T. Nagar, Chennai",
+          time: "2024-01-15 11:30:18",
+          camera: "ANPR-TN-05",
+          status: "Issued",
+          fine: "₹3,000",
+          image: "/violations/violation-004.svg"
+        }
+      ]
+    },
+    "License Lookups": {
+      title: "License Lookup Details", 
+      description: "Recent vehicle and driver license verifications",
+      data: [
+        {
+          id: "L001",
+          vehicle: "MH-12-AB-1234",
+          owner: "Rajesh Kumar Singh",
+          licenseNo: "MH-1234567890",
+          status: "Valid",
+          expiry: "2025-08-15",
+          location: "Mumbai Traffic Police Station",
+          time: "2024-01-15 14:25:30",
+          officer: "Constable Sharma"
+        },
+        {
+          id: "L002",
+          vehicle: "DL-3C-XY-9876", 
+          owner: "Priya Gupta",
+          licenseNo: "DL-0987654321",
+          status: "Expired",
+          expiry: "2023-12-10",
+          location: "CP Traffic Control",
+          time: "2024-01-15 13:50:45",
+          officer: "Inspector Verma"
+        },
+        {
+          id: "L003",
+          vehicle: "KA-05-MN-4567",
+          owner: "Suresh Reddy",
+          licenseNo: "KA-5678901234",
+          status: "Valid",
+          expiry: "2026-03-22",
+          location: "Electronic City Checkpoint",
+          time: "2024-01-15 12:18:15",
+          officer: "SI Rao"
+        },
+        {
+          id: "L004",
+          vehicle: "TN-09-PQ-7890",
+          owner: "Meera Iyer",
+          licenseNo: "TN-4567890123",
+          status: "Suspended",
+          expiry: "2025-11-30",
+          location: "T. Nagar Traffic Booth",
+          time: "2024-01-15 11:35:20",
+          officer: "PC Murugan"
+        }
+      ]
+    }
+  }
 
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="alerts">Active Alerts</TabsTrigger>
-          <TabsTrigger value="trends">Trends</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-        </TabsList>
+  return (
+    <PageTransition className="container-wrapper px-6 py-8">
+      <motion.div
+        variants={staggerItem}
+        initial="initial"
+        animate="animate"
+        className="mb-6"
+      >
+        <motion.h1 
+          className="text-3xl font-bold tracking-tight mb-2"
+          variants={staggerItem}
+        >
+          {config.title}
+        </motion.h1>
+        <motion.p 
+          className="text-muted-foreground"
+          variants={staggerItem}
+        >
+          {config.description}
+        </motion.p>
+      </motion.div>
+
+      {/* Contextual Banner */}
+      <ContextualBanner pageKey={key} />
+
+      <motion.div
+        variants={staggerItem}
+        initial="initial"
+        animate="animate"
+      >
+        <div className="space-y-8">
+
+        <Tabs defaultValue="overview" className="w-full">
         
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <TabsContent value="overview" className="space-y-6" id="section-overview">
+          <StaggeredContainer className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" delay={0.3}>
             {config.widgets.map((widget, i) => {
               const IconComponent = widget.icon
-              return (
-                <Card key={i}>
+              const hasDetailedInfo = widget.name === "ANPR Violations" || widget.name === "License Lookups"
+              
+              const cardContent = (
+                <AnimatedCard 
+                  key={i} 
+                  hoverable={false}
+                  delay={i * 0.1 + 0.4}
+                  className={`${hasDetailedInfo ? "cursor-pointer" : ""} group`}
+                >
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">{widget.name}</CardTitle>
-                    <IconComponent className="h-4 w-4 text-muted-foreground" />
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={smoothTransition}
+                    >
+                      <IconComponent className="h-4 w-4 text-muted-foreground" />
+                    </motion.div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{widget.value}</div>
-                    <p className={`text-xs ${
-                      widget.trend === 'up' ? 'text-red-500' : 
-                      widget.trend === 'down' ? 'text-green-500' : 
-                      widget.trend === 'critical' ? 'text-orange-500' :
-                      'text-muted-foreground'
-                    }`}>
+                    <motion.div 
+                      className="text-2xl font-bold"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ ...smoothTransition, delay: i * 0.1 + 0.5 }}
+                    >
+                      {widget.value}
+                    </motion.div>
+                    <motion.p 
+                      className={`text-xs ${
+                        widget.trend === 'up' ? 'text-red-500' : 
+                        widget.trend === 'down' ? 'text-green-500' : 
+                        widget.trend === 'critical' ? 'text-orange-500' :
+                        'text-muted-foreground'
+                      }`}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ ...smoothTransition, delay: i * 0.1 + 0.6 }}
+                    >
                       {widget.change}
-                    </p>
-                    {widget.progress && (
-                      <Progress value={widget.progress} className="mt-2" />
+                    </motion.p>
+                    {'progress' in widget && widget.progress && (
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: "100%" }}
+                        transition={{ ...smoothTransition, delay: i * 0.1 + 0.7 }}
+                      >
+                        <Progress value={widget.progress} className="mt-2" animated />
+                      </motion.div>
                     )}
-                    {widget.data && (
-                      <div className="mt-3 space-y-1">
-                        {widget.data.slice(0, 2).map((item, j) => (
-                          <div key={j} className="text-xs text-muted-foreground">
+                    {'data' in widget && widget.data && (
+                      <motion.div 
+                        className="mt-3 space-y-1"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ ...smoothTransition, delay: i * 0.1 + 0.8 }}
+                      >
+                        {widget.data.slice(0, 2).map((item: any, j: number) => (
+                          <motion.div 
+                            key={j} 
+                            className="text-xs text-muted-foreground"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ ...smoothTransition, delay: i * 0.1 + 0.9 + j * 0.1 }}
+                          >
                             {'topic' in item && (
                               <span>{item.topic} - {item.virality} viral</span>
                             )}
@@ -293,184 +464,413 @@ export default function DashboardsPage({ params }: { params: { slug?: string[] }
                             {'zone' in item && (
                               <span>{item.zone}: {item.incidents} incidents</span>
                             )}
-                          </div>
+                          </motion.div>
                         ))}
-                      </div>
+                      </motion.div>
+                    )}
+                    {hasDetailedInfo && (
+                      <motion.p 
+                        className="text-xs text-blue-500 mt-2 group-hover:text-blue-600 transition-colors"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ ...smoothTransition, delay: i * 0.1 + 1.0 }}
+                        whileHover={{ x: 2 }}
+                      >
+                        Click for details →
+                      </motion.p>
                     )}
                   </CardContent>
-                </Card>
+                </AnimatedCard>
               )
+
+              if (hasDetailedInfo) {
+                return (
+                  <Dialog key={i}>
+                    <DialogTrigger asChild>
+                      {cardContent}
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                      <motion.div
+                        initial={modalContent.initial}
+                        animate={modalContent.animate}
+                        exit={modalContent.exit}
+                      >
+                        <DialogHeader>
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={smoothTransition}
+                          >
+                            <DialogTitle>{detailedData[widget.name as keyof typeof detailedData]?.title}</DialogTitle>
+                            <DialogDescription>
+                              {detailedData[widget.name as keyof typeof detailedData]?.description}
+                            </DialogDescription>
+                          </motion.div>
+                        </DialogHeader>
+                        <motion.div 
+                          className="mt-4"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ ...smoothTransition, delay: 0.2 }}
+                        >
+                        <div className="space-y-4">
+                          {detailedData[widget.name as keyof typeof detailedData]?.data.map((item, j) => (
+                            <Card key={j} className="p-4">
+                              {widget.name === "ANPR Violations" && 'violation' in item && (
+                                <div className="flex flex-col lg:flex-row gap-4">
+                                  {/* Violation Image */}
+                                  <div className="lg:w-1/3">
+                                    <div className="relative w-full h-48 lg:h-full min-h-[200px] rounded-lg overflow-hidden border">
+                                      <Image
+                                        src={item.image || "/placeholder.svg"}
+                                        alt={`Violation ${item.id} - ${item.violation}`}
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                                      />
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Violation Details */}
+                                  <div className="lg:w-2/3">
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                                      <div>
+                                        <p className="font-semibold text-muted-foreground">ID</p>
+                                        <p>{item.id}</p>
+                                      </div>
+                                      <div>
+                                        <p className="font-semibold text-muted-foreground">Vehicle</p>
+                                        <p className="font-mono">{item.vehicle}</p>
+                                      </div>
+                                      <div>
+                                        <p className="font-semibold text-muted-foreground">Violation</p>
+                                        <p className="text-red-600 font-medium">{item.violation}</p>
+                                      </div>
+                                      <div className="md:col-span-2">
+                                        <p className="font-semibold text-muted-foreground">Location</p>
+                                        <p className="flex items-center gap-1">
+                                          <LocationIcon className="h-3 w-3" />
+                                          {item.location}
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p className="font-semibold text-muted-foreground">Time</p>
+                                        <p className="flex items-center gap-1">
+                                          <Clock className="h-3 w-3" />
+                                          {item.time}
+                                        </p>
+                                      </div>
+                                      {'speed' in item && (
+                                        <div>
+                                          <p className="font-semibold text-muted-foreground">Speed</p>
+                                          <p className="text-red-600">{item.speed}</p>
+                                        </div>
+                                      )}
+                                      <div>
+                                        <p className="font-semibold text-muted-foreground">Camera</p>
+                                        <p>{item.camera}</p>
+                                      </div>
+                                      <div>
+                                        <p className="font-semibold text-muted-foreground">Status</p>
+                                        <Badge variant={item.status === 'Processed' || item.status === 'Issued' ? 'default' : 
+                                                     item.status === 'Pending' || item.status === 'Under Review' ? 'secondary' : 'destructive'}>
+                                          {item.status}
+                                        </Badge>
+                                      </div>
+                                      <div>
+                                        <p className="font-semibold text-muted-foreground">Fine</p>
+                                        <p className="text-green-600 font-semibold">{item.fine}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                              {widget.name === "License Lookups" && 'owner' in item && (
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground">ID</p>
+                                      <p>{item.id}</p>
+                                    </div>
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground">Vehicle</p>
+                                      <p className="font-mono">{item.vehicle}</p>
+                                    </div>
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground">Owner</p>
+                                      <p className="flex items-center gap-1">
+                                        <User className="h-3 w-3" />
+                                        {item.owner}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground">License No.</p>
+                                      <p className="font-mono">{item.licenseNo}</p>
+                                    </div>
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground">Status</p>
+                                      <Badge variant={item.status === 'Valid' ? 'default' : 
+                                                   item.status === 'Expired' || item.status === 'Suspended' ? 'destructive' : 'secondary'}>
+                                        {item.status}
+                                      </Badge>
+                                    </div>
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground">Expiry</p>
+                                      <p className="flex items-center gap-1">
+                                        <Calendar className="h-3 w-3" />
+                                        {item.expiry}
+                                      </p>
+                                    </div>
+                                    <div className="md:col-span-2">
+                                      <p className="font-semibold text-muted-foreground">Location</p>
+                                      <p className="flex items-center gap-1">
+                                        <LocationIcon className="h-3 w-3" />
+                                        {item.location}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground">Time</p>
+                                      <p className="flex items-center gap-1">
+                                        <Clock className="h-3 w-3" />
+                                        {item.time}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="font-semibold text-muted-foreground">Officer</p>
+                                      <p>{item.officer}</p>
+                                    </div>
+                                </div>
+                              )}
+                            </Card>
+                          ))}
+                        </div>
+                        </motion.div>
+                      </motion.div>
+                    </DialogContent>
+                  </Dialog>
+                )
+              }
+
+              return cardContent
             })}
-          </div>
+          </StaggeredContainer>
         </TabsContent>
 
-        <TabsContent value="alerts" className="space-y-4">
-          <div className="grid gap-4">
+        <TabsContent value="alerts" className="space-y-4" id="section-alerts">
+          <StaggeredContainer className="grid gap-4">
             {[
               { type: "Critical", title: "Major traffic incident detected", location: "Ring Road", time: "2 min ago", severity: "high" },
               { type: "Warning", title: "Protest gathering forming", location: "Freedom Park", time: "5 min ago", severity: "medium" },
               { type: "Info", title: "Water complaints increasing", location: "HSR Layout", time: "8 min ago", severity: "low" }
             ].map((alert, i) => (
-              <Card key={i}>
+              <AnimatedCard key={i} hoverable={true} delay={i * 0.1}>
                 <CardContent className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-3">
-                    <Badge variant={alert.severity === 'high' ? 'destructive' : alert.severity === 'medium' ? 'default' : 'secondary'}>
-                      {alert.type}
-                    </Badge>
-                    <div>
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ ...smoothTransition, delay: i * 0.1 + 0.2 }}
+                    >
+                      <Badge variant={alert.severity === 'high' ? 'destructive' : alert.severity === 'medium' ? 'default' : 'secondary'}>
+                        {alert.type}
+                      </Badge>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ ...smoothTransition, delay: i * 0.1 + 0.3 }}
+                    >
                       <p className="font-medium">{alert.title}</p>
                       <p className="text-sm text-muted-foreground">{alert.location} • {alert.time}</p>
-                    </div>
+                    </motion.div>
                   </div>
-                  <Button size="sm">View Details</Button>
+                  <AnimatedButton size="sm">View Details</AnimatedButton>
                 </CardContent>
-              </Card>
+              </AnimatedCard>
             ))}
-          </div>
+          </StaggeredContainer>
         </TabsContent>
 
-        <TabsContent value="trends" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+        <TabsContent value="trends" className="space-y-6" id="section-trends">
+          <StaggeredContainer className="grid gap-6 md:grid-cols-2">
             {/* Incident Trends Chart */}
-            <Card>
+            <AnimatedCard hoverable={true} delay={0.1}>
               <CardHeader>
-                <CardTitle>Incident Trends</CardTitle>
-                <CardDescription>Monthly incident volume and resolution rates</CardDescription>
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ ...smoothTransition, delay: 0.2 }}
+                >
+                  <CardTitle>Incident Trends</CardTitle>
+                  <CardDescription>Monthly incident volume and resolution rates</CardDescription>
+                </motion.div>
               </CardHeader>
               <CardContent>
-                <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                  <AreaChart data={incidentTrendData}>
-                    <CartesianGrid vertical={false} />
-                    <XAxis
-                      dataKey="month"
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={8}
-                    />
-                    <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent indicator="line" />}
-                    />
-                    <Area
-                      dataKey="incidents"
-                      type="natural"
-                      fill="var(--color-incidents)"
-                      fillOpacity={0.4}
-                      stroke="var(--color-incidents)"
-                    />
-                    <Area
-                      dataKey="resolved"
-                      type="natural"
-                      fill="var(--color-resolved)"
-                      fillOpacity={0.4}
-                      stroke="var(--color-resolved)"
-                    />
-                  </AreaChart>
-                </ChartContainer>
+                <motion.div
+                  variants={chartFadeIn}
+                  initial="initial"
+                  animate="animate"
+                >
+                  <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                    <AreaChart data={incidentTrendData}>
+                      <CartesianGrid vertical={false} />
+                      <XAxis
+                        dataKey="month"
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                      />
+                      <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent indicator="line" />}
+                      />
+                      <Area
+                        dataKey="incidents"
+                        type="natural"
+                        fill="var(--color-incidents)"
+                        fillOpacity={0.4}
+                        stroke="var(--color-incidents)"
+                      />
+                      <Area
+                        dataKey="resolved"
+                        type="natural"
+                        fill="var(--color-resolved)"
+                        fillOpacity={0.4}
+                        stroke="var(--color-resolved)"
+                      />
+                    </AreaChart>
+                  </ChartContainer>
+                </motion.div>
               </CardContent>
-            </Card>
+            </AnimatedCard>
 
             {/* Response Time Chart */}
-            <Card>
+            <AnimatedCard hoverable={true} delay={0.2}>
               <CardHeader>
-                <CardTitle>Response Time Performance</CardTitle>
-                <CardDescription>Daily average response times vs target</CardDescription>
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ ...smoothTransition, delay: 0.3 }}
+                >
+                  <CardTitle>Response Time Performance</CardTitle>
+                  <CardDescription>Daily average response times vs target</CardDescription>
+                </motion.div>
               </CardHeader>
               <CardContent>
+                <motion.div
+                  variants={chartFadeIn}
+                  initial="initial"
+                  animate="animate"
+                >
+                  <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                    <BarChart data={responseTimeData}>
+                      <CartesianGrid vertical={false} />
+                      <XAxis
+                        dataKey="day"
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                      />
+                      <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent indicator="dashed" />}
+                      />
+                      <Bar
+                        dataKey="avgTime"
+                        fill="var(--color-avgTime)"
+                        radius={4}
+                      />
+                      <Bar
+                        dataKey="target"
+                        fill="var(--color-target)"
+                        fillOpacity={0.3}
+                        radius={4}
+                      />
+                    </BarChart>
+                  </ChartContainer>
+                </motion.div>
+              </CardContent>
+            </AnimatedCard>
+          </StaggeredContainer>
+
+          {/* Traffic Flow Chart */}
+          <AnimatedCard hoverable={true} delay={0.3}>
+            <CardHeader>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ ...smoothTransition, delay: 0.4 }}
+              >
+                <CardTitle>Traffic Flow & Incidents</CardTitle>
+                <CardDescription>Hourly traffic volume and incident correlation</CardDescription>
+              </motion.div>
+            </CardHeader>
+            <CardContent>
+              <motion.div
+                variants={chartFadeIn}
+                initial="initial"
+                animate="animate"
+                transition={{ ...smoothTransition, delay: 0.5 }}
+              >
                 <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                  <BarChart data={responseTimeData}>
+                  <LineChart data={trafficFlowData}>
                     <CartesianGrid vertical={false} />
                     <XAxis
-                      dataKey="day"
+                      dataKey="hour"
                       tickLine={false}
                       axisLine={false}
                       tickMargin={8}
                     />
                     <ChartTooltip
                       cursor={false}
-                      content={<ChartTooltipContent indicator="dashed" />}
+                      content={<ChartTooltipContent indicator="dot" />}
                     />
-                    <Bar
-                      dataKey="avgTime"
-                      fill="var(--color-avgTime)"
-                      radius={4}
+                    <Line
+                      dataKey="vehicles"
+                      type="monotone"
+                      stroke="var(--color-vehicles)"
+                      strokeWidth={2}
+                      dot={false}
                     />
-                    <Bar
-                      dataKey="target"
-                      fill="var(--color-target)"
-                      fillOpacity={0.3}
-                      radius={4}
+                    <Line
+                      dataKey="incidents"
+                      type="monotone"
+                      stroke="var(--color-trafficIncidents)"
+                      strokeWidth={2}
+                      dot={false}
                     />
-                  </BarChart>
+                  </LineChart>
                 </ChartContainer>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Traffic Flow Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Traffic Flow & Incidents</CardTitle>
-              <CardDescription>Hourly traffic volume and incident correlation</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                <LineChart data={trafficFlowData}>
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="hour"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="dot" />}
-                  />
-                  <Line
-                    dataKey="vehicles"
-                    type="monotone"
-                    stroke="var(--color-vehicles)"
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line
-                    dataKey="incidents"
-                    type="monotone"
-                    stroke="var(--color-incidents)"
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                </LineChart>
-              </ChartContainer>
+              </motion.div>
             </CardContent>
-          </Card>
+          </AnimatedCard>
         </TabsContent>
 
-        <TabsContent value="reports">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
+        <TabsContent value="reports" id="section-reports">
+          <StaggeredContainer className="grid gap-4 md:grid-cols-2">
+            <AnimatedCard hoverable={true} delay={0.1}>
               <CardHeader>
                 <CardTitle>Quick Reports</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="outline" className="w-full justify-start">Daily Summary Report</Button>
-                <Button variant="outline" className="w-full justify-start">Weekly Trend Analysis</Button>
-                <Button variant="outline" className="w-full justify-start">Incident Response Summary</Button>
+                <AnimatedButton variant="outline" className="w-full justify-start">Daily Summary Report</AnimatedButton>
+                <AnimatedButton variant="outline" className="w-full justify-start">Weekly Trend Analysis</AnimatedButton>
+                <AnimatedButton variant="outline" className="w-full justify-start">Incident Response Summary</AnimatedButton>
               </CardContent>
-            </Card>
-            <Card>
+            </AnimatedCard>
+            <AnimatedCard hoverable={true} delay={0.2}>
               <CardHeader>
                 <CardTitle>Custom Reports</CardTitle>
               </CardHeader>
               <CardContent>
-                <Button className="w-full">Create Custom Report</Button>
+                <AnimatedButton className="w-full">Create Custom Report</AnimatedButton>
               </CardContent>
-            </Card>
-          </div>
+            </AnimatedCard>
+          </StaggeredContainer>
         </TabsContent>
-      </Tabs>
-    </div>
+        </Tabs>
+        </div>
+      </motion.div>
+    </PageTransition>
   )
 }
 

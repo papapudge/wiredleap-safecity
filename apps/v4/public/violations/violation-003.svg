@@ -1,0 +1,10 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#f3f4f6"/>
+  <rect x="50" y="50" width="300" height="200" fill="#e5e7eb" stroke="#9ca3af" stroke-width="2"/>
+  <text x="200" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#374151">Wrong Lane Usage</text>
+  <text x="200" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">KA-05-MN-4567</text>
+  <text x="200" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#9ca3af">Lane Violation</text>
+  <path d="M 100 200 L 300 200" stroke="#ef4444" stroke-width="4" fill="none"/>
+  <path d="M 100 220 L 300 220" stroke="#ef4444" stroke-width="4" fill="none"/>
+  <text x="200" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ef4444">↔</text>
+</svg>

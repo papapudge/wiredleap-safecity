@@ -22,6 +22,12 @@ import {
   XCircle,
   AlertCircle
 } from "lucide-react"
+import dynamic from "next/dynamic"
+
+const GoogleMap = dynamic(() => import("@/components/google-map").then(mod => ({ default: mod.GoogleMap })), {
+  ssr: false,
+  loading: () => <div className="h-full w-full bg-muted flex items-center justify-center">Loading map...</div>
+})
 
 export default function IncidentsPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -40,7 +46,9 @@ export default function IncidentsPage() {
       phone: "+91 98765 43210",
       timestamp: "2024-01-15 14:30",
       assignedTo: "Traffic Unit Alpha",
-      eta: "5 mins"
+      eta: "5 mins",
+      lat: 12.9698,
+      lng: 77.7500
     },
     {
       id: "INC-002", 
@@ -53,7 +61,9 @@ export default function IncidentsPage() {
       phone: "+91 98765 43211",
       timestamp: "2024-01-15 14:15",
       assignedTo: "Patrol Unit Beta",
-      eta: "8 mins"
+      eta: "8 mins",
+      lat: 12.9279,
+      lng: 77.6271
     },
     {
       id: "INC-003",
@@ -66,7 +76,9 @@ export default function IncidentsPage() {
       phone: "+91 98765 43212",
       timestamp: "2024-01-15 13:45",
       assignedTo: "Bomb Squad",
-      eta: "Resolved"
+      eta: "Resolved",
+      lat: 12.9716,
+      lng: 77.6412
     },
     {
       id: "INC-004",
@@ -79,7 +91,9 @@ export default function IncidentsPage() {
       phone: "+91 98765 43213",
       timestamp: "2024-01-15 14:45",
       assignedTo: "Traffic Unit Gamma",
-      eta: "3 mins"
+      eta: "3 mins",
+      lat: 12.8456,
+      lng: 77.6603
     }
   ]
 
@@ -99,6 +113,16 @@ export default function IncidentsPage() {
       case "low": return "secondary"
       default: return "outline"
     }
+  }
+
+  const getStatusSeverity = (status: string, priority: string): 'high' | 'medium' | 'low' => {
+    if (status === "active") {
+      return priority as 'high' | 'medium' | 'low'
+    }
+    if (status === "investigating") {
+      return "medium"
+    }
+    return "low" // resolved
   }
 
   const getStatusIcon = (status: string) => {
@@ -417,17 +441,43 @@ export default function IncidentsPage() {
         <TabsContent value="map" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>Incident Map View</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-96 bg-muted/20 rounded-lg flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">Interactive map showing incident locations</p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {filteredIncidents.length} incidents displayed
-                  </p>
+              <CardTitle className="flex items-center justify-between">
+                Incident Map View
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <span>{filteredIncidents.length} incidents displayed</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-500 rounded-full" />
+                    <span className="text-xs">Active</span>
+                    <div className="w-3 h-3 bg-orange-500 rounded-full ml-2" />
+                    <span className="text-xs">Investigating</span>
+                    <div className="w-3 h-3 bg-green-500 rounded-full ml-2" />
+                    <span className="text-xs">Resolved</span>
+                  </div>
                 </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="h-[600px]">
+                <GoogleMap
+                  center={{ lat: 12.9716, lng: 77.5946 }}
+                  zoom={11}
+                  className="h-full w-full rounded-b-lg"
+                  markers={filteredIncidents.map(incident => ({
+                    id: incident.id,
+                    lat: incident.lat,
+                    lng: incident.lng,
+                    title: incident.title,
+                    severity: getStatusSeverity(incident.status, incident.priority),
+                    incidents: incident.priority === 'high' ? 3 : incident.priority === 'medium' ? 2 : 1
+                  }))}
+                  onMarkerClick={(incidentId) => {
+                    const incident = incidents.find(i => i.id === incidentId)
+                    if (incident) {
+                      console.log('Selected incident:', incident)
+                      // You can add additional logic here to show incident details
+                    }
+                  }}
+                />
               </div>
             </CardContent>
           </Card>

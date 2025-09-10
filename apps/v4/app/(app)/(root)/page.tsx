@@ -102,7 +102,7 @@ export default function LandingPage() {
     {
       name: "Dr. Priya Sharma", 
       role: "Municipal Corporation",
-      content: "The platform&apos;s ability to track citizen sentiment has improved our public service delivery significantly.",
+      content: "The platform's ability to track citizen sentiment has improved our public service delivery significantly.",
       rating: 5,
       avatar: "/avatars/municipal.jpg"
     },
@@ -220,7 +220,7 @@ export default function LandingPage() {
           
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground mb-8 sm:mb-12 max-w-xs sm:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed">
             Neural quantum processing that predicts threats with 99.7% accuracy. 
-            Our AI doesn&apos;t just analyze data—it understands human behavior patterns across 
+            Our AI doesn't just analyze data—it understands human behavior patterns across 
             14 dimensional vectors, seeing incidents 47 minutes before they occur.
           </p>
           
@@ -604,7 +604,7 @@ export default function LandingPage() {
               Join the Future of Law Enforcement Today
             </h2>
             <p className="text-xl text-muted-foreground mb-12">
-              Don&apos;t let another crisis catch you unprepared. Start your free trial today and 
+              Don't let another crisis catch you unprepared. Start your free trial today and 
               experience the power of real-time intelligence.
             </p>
             
@@ -672,40 +672,40 @@ export default function LandingPage() {
                 </Button>
               </div>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold mb-4">Platform</h4>
-              <div className="space-y-3 text-sm text-muted-foreground">
-                <div><Link href="/features" className="hover:text-foreground">Features</Link></div>
-                <div><Link href="/integrations" className="hover:text-foreground">Integrations</Link></div>
-                <div><Link href="/security" className="hover:text-foreground">Security</Link></div>
-                <div><Link href="/api" className="hover:text-foreground">API Docs</Link></div>
-              </div>
+              <h3 className="font-semibold mb-4">Product</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/features" className="hover:text-foreground">Features</Link></li>
+                <li><Link href="/pricing" className="hover:text-foreground">Pricing</Link></li>
+                <li><Link href="/integrations" className="hover:text-foreground">Integrations</Link></li>
+                <li><Link href="/security" className="hover:text-foreground">Security</Link></li>
+              </ul>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold mb-4">Solutions</h4>
-              <div className="space-y-3 text-sm text-muted-foreground">
-                <div><Link href="/police" className="hover:text-foreground">Police Departments</Link></div>
-                <div><Link href="/traffic" className="hover:text-foreground">Traffic Management</Link></div>
-                <div><Link href="/municipal" className="hover:text-foreground">Municipal Services</Link></div>
-                <div><Link href="/enterprise" className="hover:text-foreground">Enterprise</Link></div>
-              </div>
+              <h3 className="font-semibold mb-4">Solutions</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/police" className="hover:text-foreground">Law Enforcement</Link></li>
+                <li><Link href="/traffic" className="hover:text-foreground">Traffic Management</Link></li>
+                <li><Link href="/municipal" className="hover:text-foreground">Municipal Services</Link></li>
+                <li><Link href="/emergency" className="hover:text-foreground">Emergency Response</Link></li>
+              </ul>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <div className="space-y-3 text-sm text-muted-foreground">
-                <div><Link href="/help" className="hover:text-foreground">Help Center</Link></div>
-                <div><Link href="/training" className="hover:text-foreground">Training</Link></div>
-                <div><Link href="/status" className="hover:text-foreground">System Status</Link></div>
-                <div><Link href="/contact" className="hover:text-foreground">Contact Us</Link></div>
-              </div>
+              <h3 className="font-semibold mb-4">Company</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/about" className="hover:text-foreground">About Us</Link></li>
+                <li><Link href="/careers" className="hover:text-foreground">Careers</Link></li>
+                <li><Link href="/news" className="hover:text-foreground">News</Link></li>
+                <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
+              </ul>
             </div>
           </div>
-          
-          <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-sm text-muted-foreground">
+
+          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-border/60">
+            <div className="text-sm text-muted-foreground mb-4 md:mb-0">
               © 2024 WiredLeap Technologies. All rights reserved.
             </div>
             <div className="flex gap-6 text-sm text-muted-foreground">

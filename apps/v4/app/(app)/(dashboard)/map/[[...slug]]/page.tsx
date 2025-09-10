@@ -31,12 +31,16 @@ import {
   Share,
   Maximize
 } from "lucide-react"
+import { GoogleMap } from "@/components/google-map"
+import { ContextualBanner } from "@/components/contextual-banner"
 
 export default function MapPage({ params }: { params: { slug?: string[] } }) {
   const [selectedLayer, setSelectedLayer] = useState("incidents")
   const [filterRadius, setFilterRadius] = useState([5])
   const [realTimeMode, setRealTimeMode] = useState(true)
   const [selectedZone, setSelectedZone] = useState<string | null>(null)
+  const [mapCenter, setMapCenter] = useState({ lat: 12.9716, lng: 77.5946 })
+  const [mapZoom, setMapZoom] = useState(12)
 
   const resolvedParams = params
   const slug = resolvedParams.slug ?? []
@@ -48,6 +52,13 @@ export default function MapPage({ params }: { params: { slug?: string[] } }) {
     { id: "zone-3", name: "Indiranagar", incidents: 15, severity: "medium", lat: 12.9716, lng: 77.6412, alerts: 2 },
     { id: "zone-4", name: "HSR Layout", incidents: 12, severity: "low", lat: 12.9082, lng: 77.6476, alerts: 1 },
     { id: "zone-5", name: "Electronic City", incidents: 20, severity: "high", lat: 12.8456, lng: 77.6603, alerts: 4 },
+    { id: "zone-6", name: "MG Road", incidents: 25, severity: "high", lat: 12.9753, lng: 77.6047, alerts: 6 },
+    { id: "zone-7", name: "Jayanagar", incidents: 14, severity: "medium", lat: 12.9279, lng: 77.5837, alerts: 2 },
+    { id: "zone-8", name: "BTM Layout", incidents: 16, severity: "medium", lat: 12.9165, lng: 77.6101, alerts: 3 },
+    { id: "zone-9", name: "Banashankari", incidents: 8, severity: "low", lat: 12.9081, lng: 77.5753, alerts: 1 },
+    { id: "zone-10", name: "Marathahalli", incidents: 19, severity: "high", lat: 12.9591, lng: 77.6974, alerts: 4 },
+    { id: "zone-11", name: "Rajajinagar", incidents: 11, severity: "low", lat: 12.9886, lng: 77.5535, alerts: 1 },
+    { id: "zone-12", name: "JP Nagar", incidents: 13, severity: "medium", lat: 12.9098, lng: 77.5951, alerts: 2 },
   ]
 
   const layers = [
@@ -95,6 +106,9 @@ export default function MapPage({ params }: { params: { slug?: string[] } }) {
         </div>
       </div>
 
+      {/* Contextual Banner */}
+      <ContextualBanner pageKey="map" />
+
       <div className="grid grid-cols-12 gap-6">
         {/* Map Controls Panel */}
         <div className="col-span-3 space-y-4">
@@ -117,7 +131,6 @@ export default function MapPage({ params }: { params: { slug?: string[] } }) {
                     <Switch 
                       checked={selectedLayer === layer.id}
                       onCheckedChange={() => setSelectedLayer(layer.id)}
-                      size="sm"
                     />
                   </div>
                 </div>
@@ -220,7 +233,7 @@ export default function MapPage({ params }: { params: { slug?: string[] } }) {
 
         {/* Main Map Area */}
         <div className="col-span-6">
-          <Card className="h-[700px]">
+          <Card className="h-[800px]">
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle>Interactive Map View</CardTitle>
               <div className="flex gap-1">
@@ -239,47 +252,28 @@ export default function MapPage({ params }: { params: { slug?: string[] } }) {
               </div>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="relative bg-muted/20 h-full flex items-center justify-center">
-                {/* Mock Map Visualization */}
-                <div className="absolute inset-4 bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg overflow-hidden">
-                  {/* Grid overlay */}
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="grid grid-cols-8 grid-rows-6 h-full">
-                      {Array.from({ length: 48 }).map((_, i) => (
-                        <div key={i} className="border border-slate-300" />
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Zone Markers */}
-                  {zones.map((zone, index) => (
-                    <div
-                      key={zone.id}
-                      className={`absolute w-6 h-6 rounded-full border-2 border-white shadow-lg cursor-pointer transform -translate-x-1/2 -translate-y-1/2 ${
-                        zone.severity === 'high' ? 'bg-red-500' : 
-                        zone.severity === 'medium' ? 'bg-orange-500' : 'bg-green-500'
-                      }`}
-                      style={{
-                        left: `${20 + (index * 15)}%`,
-                        top: `${25 + (index * 10)}%`
-                      }}
-                      title={`${zone.name}: ${zone.incidents} incidents`}
-                    >
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 hover:opacity-100 transition-opacity whitespace-nowrap">
-                        {zone.name}: {zone.incidents} incidents
-                      </div>
-                    </div>
-                  ))}
-
-                  {/* Heat Map Overlay (when selected) */}
-                  {selectedLayer === "incidents" && (
-                    <>
-                      <div className="absolute w-24 h-24 bg-red-400 rounded-full opacity-30 blur-xl" style={{ left: '20%', top: '25%' }} />
-                      <div className="absolute w-20 h-20 bg-orange-400 rounded-full opacity-30 blur-xl" style={{ left: '35%', top: '35%' }} />
-                      <div className="absolute w-16 h-16 bg-yellow-400 rounded-full opacity-30 blur-xl" style={{ left: '50%', top: '45%' }} />
-                    </>
-                  )}
-                </div>
+              <div className="relative h-full">
+                <GoogleMap
+                  center={mapCenter}
+                  zoom={mapZoom}
+                  className="h-full w-full rounded-b-lg"
+                  markers={zones.map(zone => ({
+                    id: zone.id,
+                    lat: zone.lat,
+                    lng: zone.lng,
+                    title: zone.name,
+                    severity: zone.severity as 'high' | 'medium' | 'low',
+                    incidents: zone.incidents
+                  }))}
+                  onMarkerClick={(markerId) => {
+                    const zone = zones.find(z => z.id === markerId)
+                    if (zone) {
+                      setSelectedZone(selectedZone === markerId ? null : markerId)
+                      setMapCenter({ lat: zone.lat, lng: zone.lng })
+                      setMapZoom(14)
+                    }
+                  }}
+                />
 
                 {/* Map Legend */}
                 <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-lg">
@@ -304,6 +298,26 @@ export default function MapPage({ params }: { params: { slug?: string[] } }) {
                 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm p-2 rounded-lg shadow-lg">
                   <div className="text-xs text-muted-foreground">Viewing: Bangalore City</div>
                   <div className="text-sm font-medium">Active Layer: {layers.find(l => l.id === selectedLayer)?.name}</div>
+                  {selectedZone && (
+                    <div className="text-xs text-blue-600 font-medium mt-1">
+                      Selected: {zones.find(z => z.id === selectedZone)?.name}
+                    </div>
+                  )}
+                </div>
+
+                {/* Zoom Reset Button */}
+                <div className="absolute top-4 right-4">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      setMapCenter({ lat: 12.9716, lng: 77.5946 })
+                      setMapZoom(12)
+                      setSelectedZone(null)
+                    }}
+                  >
+                    Reset View
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -504,16 +518,140 @@ export default function MapPage({ params }: { params: { slug?: string[] } }) {
           </TabsContent>
 
           <TabsContent value="routes" className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Optimized Patrol Routes</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-48 flex items-center justify-center text-muted-foreground">
-                  AI-optimized patrol route recommendations would be displayed here
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>AI-Optimized Patrol Routes</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Machine learning algorithms analyze historical data, current incidents, and traffic patterns to generate optimal patrol routes
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <GoogleMap
+                    center={mapCenter}
+                    zoom={mapZoom}
+                    className="h-96 w-full rounded-lg"
+                    markers={zones.filter(zone => zone.severity === 'high').map(zone => ({
+                      id: `route-${zone.id}`,
+                      lat: zone.lat,
+                      lng: zone.lng,
+                      title: `Priority Route - ${zone.name}`,
+                      severity: zone.severity as 'high' | 'medium' | 'low',
+                      incidents: zone.incidents
+                    }))}
+                    onMarkerClick={(markerId) => {
+                      const zoneId = markerId.replace('route-', '')
+                      const zone = zones.find(z => z.id === zoneId)
+                      if (zone) {
+                        setMapCenter({ lat: zone.lat, lng: zone.lng })
+                        setMapZoom(15)
+                      }
+                    }}
+                  />
+                </CardContent>
+              </Card>
+
+              <div className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Route Recommendations</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {zones
+                      .filter(zone => zone.severity === 'high')
+                      .slice(0, 3)
+                      .map((zone, index) => (
+                        <div key={zone.id} className="border rounded-lg p-4 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="destructive" className="text-xs">
+                                Priority {index + 1}
+                              </Badge>
+                              <span className="font-medium">{zone.name}</span>
+                            </div>
+                            <span className="text-sm text-muted-foreground">
+                              {zone.incidents} incidents
+                            </span>
+                          </div>
+                          
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Estimated patrol time:</span>
+                              <span className="font-medium">{25 + index * 5} min</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Risk reduction:</span>
+                              <span className="font-medium text-green-600">{35 - index * 5}%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Optimal deployment time:</span>
+                              <span className="font-medium">
+                                {new Date(Date.now() + (index * 30 * 60 * 1000)).toLocaleTimeString('en-US', { 
+                                  hour: '2-digit', 
+                                  minute: '2-digit' 
+                                })}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => {
+                                setMapCenter({ lat: zone.lat, lng: zone.lng })
+                                setMapZoom(15)
+                              }}
+                            >
+                              <MapPin className="h-3 w-3 mr-1" />
+                              View Route
+                            </Button>
+                            <Button size="sm" variant="outline">
+                              <Navigation className="h-3 w-3 mr-1" />
+                              Dispatch Unit
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Route Analytics</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center p-3 bg-muted/50 rounded-lg">
+                          <div className="text-2xl font-bold text-primary">12</div>
+                          <div className="text-xs text-muted-foreground">Active Routes</div>
+                        </div>
+                        <div className="text-center p-3 bg-muted/50 rounded-lg">
+                          <div className="text-2xl font-bold text-green-600">23%</div>
+                          <div className="text-xs text-muted-foreground">Time Saved</div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Coverage efficiency:</span>
+                          <span className="font-medium">87%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Fuel savings:</span>
+                          <span className="font-medium text-green-600">₹2,340/day</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Response time improvement:</span>
+                          <span className="font-medium text-blue-600">-2.3 min</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
